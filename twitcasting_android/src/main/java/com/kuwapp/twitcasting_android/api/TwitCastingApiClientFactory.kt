@@ -19,7 +19,7 @@ private fun createRetrofit(client: OkHttpClient): Retrofit {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
-            .baseUrl("")
+            .baseUrl("https://apiv2.twitcasting.tv")
             .build()
 }
 

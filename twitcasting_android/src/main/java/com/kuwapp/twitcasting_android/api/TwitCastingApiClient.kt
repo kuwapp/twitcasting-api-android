@@ -23,7 +23,7 @@ internal class TwitCastingApiClientImpl(retrofit: Retrofit)
 
     internal interface TwitCastingService {
 
-        @GET("/users/:user_id")
+        @GET("/users/{user_id}")
         fun getUserInfo(@Path("user_id") userId: String): Single<GetUserInfoJson>
 
     }
