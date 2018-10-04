@@ -10,9 +10,10 @@ object TwitCasting {
         this.clientSecret = clientSecret
     }
 
+    @Throws(TwitCastingNotInitializedException::class)
     internal fun config(): TwitCastingConfig {
-        val clientId = clientId ?: throw RuntimeException()
-        val clientSecret = clientSecret ?: throw RuntimeException()
+        val clientId = clientId ?: throw TwitCastingNotInitializedException()
+        val clientSecret = clientSecret ?: throw TwitCastingNotInitializedException()
         return TwitCastingConfig(clientId, clientSecret)
     }
 
