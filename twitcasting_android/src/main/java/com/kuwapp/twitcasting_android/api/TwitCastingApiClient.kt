@@ -7,8 +7,9 @@ import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
+import okhttp3.ResponseBody
+import retrofit2.Converter
 import retrofit2.HttpException
-import retrofit2.Retrofit
 import retrofit2.http.GET
 import retrofit2.http.Path
 import java.io.IOException
@@ -19,11 +20,9 @@ interface TwitCastingApiClient {
 
 }
 
-internal class TwitCastingApiClientImpl(retrofit: Retrofit)
+internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
+                                        private val apiErrorConverter: ApiErrorConverter)
     : TwitCastingApiClient {
-
-    private val errorConverter = retrofit.responseBodyConverter<ResponseErrorJson>(ResponseErrorJson::class.java, emptyArray())
-    private val service = retrofit.create(TwitCastingService::class.java)
 
     override fun getUserInfo(userId: String): Single<GetUserInfoJson> {
         return service.getUserInfo(userId).mapApiError()
@@ -41,27 +40,32 @@ internal class TwitCastingApiClientImpl(retrofit: Retrofit)
                 }
 
                 override fun onError(e: Throwable) {
-                    val apiError = (e as? HttpException)?.response()?.errorBody()?.let {
-                        try {
-                            errorConverter.convert(it)
-                        } catch (e: IOException) {
-                            null
-                        }
-                    }?.error ?: run {
-                        observer.onError(e)
-                        return
-                    }
-                    observer.onError(TwitCastingApiException(ApiError.findBy(apiError.code), apiError.message))
+                    observer.onError(apiErrorConverter.convert(e))
                 }
             }
         }
     }
 
-    internal interface TwitCastingService {
+}
 
-        @GET("/users/{user_id}")
-        fun getUserInfo(@Path("user_id") userId: String): Single<GetUserInfoJson>
+internal interface TwitCastingService {
 
+    @GET("/users/{user_id}")
+    fun getUserInfo(@Path("user_id") userId: String): Single<GetUserInfoJson>
+
+}
+
+internal class ApiErrorConverter(private val errorConverter: Converter<ResponseBody, ResponseErrorJson>) {
+
+    fun convert(throwable: Throwable): Throwable {
+        if (throwable !is HttpException) return throwable
+        val errorBody = throwable.response().errorBody() ?: return throwable
+        try {
+            val error = errorConverter.convert(errorBody)?.error ?: return throwable
+            return TwitCastingApiException(ApiError.findBy(error.code), error.message)
+        } catch (e: IOException) {
+            return throwable
+        }
     }
 
 }

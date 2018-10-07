@@ -1,5 +1,6 @@
 package com.kuwapp.twitcasting_android.api
 
+import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -11,7 +12,9 @@ internal fun createTwitCastingApiClient(clientId: String, clientSecret: String):
     })
     val okHttpClient = createOkHttpClient(authHeader)
     val retrofit = createRetrofit(okHttpClient)
-    return TwitCastingApiClientImpl(retrofit)
+    val bodyConverter = retrofit.responseBodyConverter<ResponseErrorJson>(ResponseErrorJson::class.java, emptyArray())
+    val errorConverter = ApiErrorConverter(bodyConverter)
+    return TwitCastingApiClientImpl(retrofit.create(TwitCastingService::class.java), errorConverter)
 }
 
 private fun createRetrofit(client: OkHttpClient): Retrofit {
