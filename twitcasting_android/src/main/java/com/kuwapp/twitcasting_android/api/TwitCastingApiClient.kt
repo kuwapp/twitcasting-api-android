@@ -24,6 +24,8 @@ interface TwitCastingApiClient {
 
     fun getMovies(userId: String, offset: Int = 0, limit: Int = 50, sliceId: Int? = null): Single<GetMoviesJson>
 
+    fun getComments(movieId: String, offset: Int = 0, limit: Int = 50, sliceId: Int? = null): Single<GetCommentsJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -56,6 +58,11 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
 
     override fun getMovies(userId: String, offset: Int, limit: Int, sliceId: Int?): Single<GetMoviesJson> {
         return service.getMovies(userId, offset, limit, sliceId).mapApiError()
+    }
+
+
+    override fun getComments(movieId: String, offset: Int, limit: Int, sliceId: Int?): Single<GetCommentsJson> {
+        return service.getComments(movieId, offset, limit, sliceId).mapApiError()
     }
 
     private fun <T> Single<T>.mapApiError(): Single<T> {
@@ -91,6 +98,9 @@ internal interface TwitCastingService {
 
     @GET("/users/{user_id}/movies")
     fun getMovies(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("slice_id") sliceId: Int?): Single<GetMoviesJson>
+
+    @GET("/movies/{movie_id}/comments")
+    fun getComments(@Path("movie_id") movieId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("slice_id") sliceId: Int?): Single<GetCommentsJson>
 
 }
 
