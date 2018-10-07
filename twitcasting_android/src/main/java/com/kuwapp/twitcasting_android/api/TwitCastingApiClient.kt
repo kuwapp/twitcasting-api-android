@@ -24,7 +24,7 @@ interface TwitCastingApiClient {
 
     fun getComments(movieId: String, offset: Int = 0, limit: Int = 50, sliceId: Int? = null): Single<GetCommentsJson>
 
-    fun postComment(movieId: String, comment: String, snsPostType: SnsPostType = SnsPostType.None): Single<PostCommentJson>
+    fun submitComment(movieId: String, comment: String, snsPostType: SnsPostType = SnsPostType.None): Single<SubmitCommentJson>
 
     fun deleteComment(movieId: String, commentId: String): Single<DeleteCommentJson>
 
@@ -74,8 +74,8 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
     }
 
 
-    override fun postComment(movieId: String, comment: String, snsPostType: TwitCastingApiClient.SnsPostType): Single<PostCommentJson> {
-        return service.postComment(movieId, comment, snsPostType.value)
+    override fun submitComment(movieId: String, comment: String, snsPostType: TwitCastingApiClient.SnsPostType): Single<SubmitCommentJson> {
+        return service.submitComment(movieId, comment, snsPostType.value)
     }
 
     override fun deleteComment(movieId: String, commentId: String): Single<DeleteCommentJson> {
@@ -120,7 +120,7 @@ internal interface TwitCastingService {
     fun getComments(@Path("movie_id") movieId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("slice_id") sliceId: Int?): Single<GetCommentsJson>
 
     @POST("/movies/{movie_id}/comments")
-    fun postComment(@Path("movie_id") movieId: String, @Field("comment") comment: String, @Field("sns") snsType: String): Single<PostCommentJson>
+    fun submitComment(@Path("movie_id") movieId: String, @Field("comment") comment: String, @Field("sns") snsType: String): Single<SubmitCommentJson>
 
     @DELETE("/movies/{movie_id}/comments/{comment_id}")
     fun deleteComment(@Path("movie_id") movieId: String, @Path("comment_id") commentId: String): Single<DeleteCommentJson>
