@@ -42,6 +42,8 @@ interface TwitCastingApiClient {
 
     fun searchUsers(words: String, limit: Int = 50, lang: Lang = Lang.Ja): Single<SearchUsersJson>
 
+    fun searchLiveMovies(limit: Int = 100, type: LiveSearchType, context: String? = null, lang: Lang = Lang.Ja): Single<SearchLiveMoviesJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -68,6 +70,14 @@ interface TwitCastingApiClient {
         En("en")
     }
 
+    enum class LiveSearchType(internal val value: String) {
+        Tag("tag"),
+        Word("word"),
+        Category("category"),
+        New("new"),
+        Recommend("recommend")
+    }
+
 }
 
 internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
@@ -92,11 +102,9 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
         return service.getMovies(userId, offset, limit, sliceId).mapApiError()
     }
 
-
     override fun getComments(movieId: String, offset: Int, limit: Int, sliceId: Int?): Single<GetCommentsJson> {
         return service.getComments(movieId, offset, limit, sliceId).mapApiError()
     }
-
 
     override fun submitComment(movieId: String, comment: String, snsPostType: TwitCastingApiClient.SnsPostType): Single<SubmitCommentJson> {
         return service.submitComment(movieId, comment, snsPostType.value).mapApiError()
@@ -130,9 +138,12 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
         return service.getCategories(lang.value).mapApiError()
     }
 
-
     override fun searchUsers(words: String, limit: Int, lang: TwitCastingApiClient.Lang): Single<SearchUsersJson> {
         return service.searchUsers(words, limit, lang.value).mapApiError()
+    }
+
+    override fun searchLiveMovies(limit: Int, type: TwitCastingApiClient.LiveSearchType, context: String?, lang: TwitCastingApiClient.Lang): Single<SearchLiveMoviesJson> {
+        return service.searchLiveMovies(limit, type.value, context, lang.value)
     }
 
     private fun <T> Single<T>.mapApiError(): Single<T> {
@@ -198,6 +209,9 @@ internal interface TwitCastingService {
 
     @GET("/search/users")
     fun searchUsers(@Query("words") words: String, @Query("limit") limit: Int, @Query("lang") lang: String): Single<SearchUsersJson>
+
+    @GET("/search/lives")
+    fun searchLiveMovies(@Query("limit") limit: Int, @Query("type") type: String, @Query("context") context: String?, @Query("lang") lang: String): Single<SearchLiveMoviesJson>
 
 }
 
