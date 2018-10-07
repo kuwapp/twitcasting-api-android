@@ -2,9 +2,6 @@ package com.kuwapp.twitcasting_android.api
 
 import android.os.Build
 import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
-import com.nhaarman.mockito_kotlin.any
-import com.nhaarman.mockito_kotlin.doReturn
-import com.nhaarman.mockito_kotlin.mock
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse

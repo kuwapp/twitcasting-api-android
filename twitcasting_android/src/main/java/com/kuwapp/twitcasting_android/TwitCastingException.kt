@@ -2,8 +2,8 @@ package com.kuwapp.twitcasting_android
 
 class TwitCastingNotInitializedException : RuntimeException("must call TwitCasting.initialize method.")
 
-class TwitCastingApiException(val error: ApiError,
-                              val errorMessage: String) : Exception() {
+data class TwitCastingApiException(val error: ApiError,
+                                   val errorMessage: String) : Exception() {
 
 
 }
