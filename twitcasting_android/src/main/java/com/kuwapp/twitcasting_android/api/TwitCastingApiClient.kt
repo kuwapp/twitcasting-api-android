@@ -34,6 +34,8 @@ interface TwitCastingApiClient {
 
     fun unsupportUser(targetUserIds: List<String>): Single<UnsupportUserJson>
 
+    fun getSupportingUsers(userId: String, offset: Int = 0, limit: Int = 20): Single<GetSupportingUsersJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -100,6 +102,10 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
         return service.unsupportUser(targetUserIds).mapApiError()
     }
 
+    override fun getSupportingUsers(userId: String, offset: Int, limit: Int): Single<GetSupportingUsersJson> {
+        return service.getSupportingUsers(userId, offset, limit).mapApiError()
+    }
+
     private fun <T> Single<T>.mapApiError(): Single<T> {
         return lift { observer ->
             object : SingleObserver<T> {
@@ -151,6 +157,9 @@ internal interface TwitCastingService {
 
     @PUT("/unsupport")
     fun unsupportUser(@Field("target_user_ids[]") targetUserIds: List<String>): Single<UnsupportUserJson>
+
+    @GET("/users/{user_id}/supporting")
+    fun getSupportingUsers(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int): Single<GetSupportingUsersJson>
 
 }
 
