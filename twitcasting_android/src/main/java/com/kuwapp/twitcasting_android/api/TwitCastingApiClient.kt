@@ -9,9 +9,7 @@ import io.reactivex.disposables.Disposable
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import retrofit2.HttpException
-import retrofit2.http.GET
-import retrofit2.http.Path
-import retrofit2.http.Query
+import retrofit2.http.*
 import java.io.IOException
 
 interface TwitCastingApiClient {
@@ -26,6 +24,8 @@ interface TwitCastingApiClient {
 
     fun getComments(movieId: String, offset: Int = 0, limit: Int = 50, sliceId: Int? = null): Single<GetCommentsJson>
 
+    fun postComment(movieId: String, comment: String, snsPostType: SnsPostType = SnsPostType.None): Single<PostCommentJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -34,6 +34,12 @@ interface TwitCastingApiClient {
     enum class Position(internal val value: String) {
         Beginning("beginning"),
         Latest("latest")
+    }
+
+    enum class SnsPostType(internal val value: String) {
+        Reply("reply"),
+        Normal("normal"),
+        None("none")
     }
 
 }
@@ -63,6 +69,11 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
 
     override fun getComments(movieId: String, offset: Int, limit: Int, sliceId: Int?): Single<GetCommentsJson> {
         return service.getComments(movieId, offset, limit, sliceId).mapApiError()
+    }
+
+
+    override fun postComment(movieId: String, comment: String, snsPostType: TwitCastingApiClient.SnsPostType): Single<PostCommentJson> {
+        return service.postComment(movieId, comment, snsPostType.value)
     }
 
     private fun <T> Single<T>.mapApiError(): Single<T> {
@@ -101,6 +112,9 @@ internal interface TwitCastingService {
 
     @GET("/movies/{movie_id}/comments")
     fun getComments(@Path("movie_id") movieId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("slice_id") sliceId: Int?): Single<GetCommentsJson>
+
+    @POST("/movies/{movie_id}/comments")
+    fun postComment(@Path("movie_id") movieId: String, @Field("comment") comment: String, @Field("sns") snsType: String): Single<PostCommentJson>
 
 }
 
