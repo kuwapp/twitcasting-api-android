@@ -36,6 +36,8 @@ interface TwitCastingApiClient {
 
     fun getSupportingUsers(userId: String, offset: Int = 0, limit: Int = 20): Single<GetSupportingUsersJson>
 
+    fun getSupportedUsers(userId: String, offset: Int = 0, limit: Int = 20, sortType: SortType = SortType.Ranking): Single<GetSupportedUsersJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -50,6 +52,11 @@ interface TwitCastingApiClient {
         Reply("reply"),
         Normal("normal"),
         None("none")
+    }
+
+    enum class SortType(internal val value: String) {
+        New("new"),
+        Ranking("ranking")
     }
 
 }
@@ -106,6 +113,10 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
         return service.getSupportingUsers(userId, offset, limit).mapApiError()
     }
 
+    override fun getSupportedUsers(userId: String, offset: Int, limit: Int, sortType: TwitCastingApiClient.SortType): Single<GetSupportedUsersJson> {
+        return service.getSupportedUsers(userId, offset, limit, sortType.value).mapApiError()
+    }
+
     private fun <T> Single<T>.mapApiError(): Single<T> {
         return lift { observer ->
             object : SingleObserver<T> {
@@ -160,6 +171,9 @@ internal interface TwitCastingService {
 
     @GET("/users/{user_id}/supporting")
     fun getSupportingUsers(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int): Single<GetSupportingUsersJson>
+
+    @GET("/users/{user_id}/supporters")
+    fun getSupportedUsers(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("sort") sort: String): Single<GetSupportedUsersJson>
 
 }
 
