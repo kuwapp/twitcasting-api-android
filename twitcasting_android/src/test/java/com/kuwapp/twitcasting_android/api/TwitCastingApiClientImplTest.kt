@@ -32,9 +32,11 @@ internal class TwitCastingApiClientImplTest {
     fun setUp() {
         val dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest?): MockResponse {
+                println(request!!.path)
                 return when {
                     request == null -> MockResponse().setResponseCode(400)
                     request.path.matches(Regex("/users/[a-zA-Z0-9_]+")) -> MockResponse().setResponseCode(200).setBodyFromFileName("get_user_info.json")
+                    request.path.matches(Regex("/users/[a-zA-Z0-9_]+/live/thumbnail(\\?.*)?")) -> MockResponse().setResponseCode(200).setBodyFromFileName("live_thumbnail.png")
                     else -> MockResponse().setResponseCode(400)
                 }
             }
@@ -76,6 +78,22 @@ internal class TwitCastingApiClientImplTest {
                 .assertError(HttpException::class.java)
                 .errors()[0] as HttpException
         assertThat(httpException.response().code()).isEqualTo(400)
+    }
+
+    @Test
+    fun getLiveThumbnailImage_response200() {
+        val response = apiClient.getLiveThumbnailImage("kuwapp_dev")
+                .test()
+                .await()
+                .assertNoErrors()
+                .assertComplete()
+                .values()[0]
+        val inputStream = javaClass.classLoader.getResourceAsStream("live_thumbnail.png")
+        val bufferedReader = BufferedReader(InputStreamReader(inputStream))
+        val stringBuilder = StringBuilder()
+        bufferedReader.forEachLine { buffer -> stringBuilder.append(buffer) }
+        val expected = stringBuilder.toString().toByteArray()
+        assertThat(response.byteArray).isEqualTo(expected)
     }
 
 
