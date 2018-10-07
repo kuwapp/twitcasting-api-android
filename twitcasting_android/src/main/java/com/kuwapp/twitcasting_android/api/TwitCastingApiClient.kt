@@ -26,6 +26,8 @@ interface TwitCastingApiClient {
 
     fun postComment(movieId: String, comment: String, snsPostType: SnsPostType = SnsPostType.None): Single<PostCommentJson>
 
+    fun deleteComment(movieId: String, commentId: String): Single<DeleteCommentJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -76,6 +78,10 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
         return service.postComment(movieId, comment, snsPostType.value)
     }
 
+    override fun deleteComment(movieId: String, commentId: String): Single<DeleteCommentJson> {
+        return service.deleteComment(movieId, commentId)
+    }
+
     private fun <T> Single<T>.mapApiError(): Single<T> {
         return lift { observer ->
             object : SingleObserver<T> {
@@ -115,6 +121,10 @@ internal interface TwitCastingService {
 
     @POST("/movies/{movie_id}/comments")
     fun postComment(@Path("movie_id") movieId: String, @Field("comment") comment: String, @Field("sns") snsType: String): Single<PostCommentJson>
+
+    @DELETE("/movies/{movie_id}/comments/{comment_id}")
+    fun deleteComment(@Path("movie_id") movieId: String, @Path("comment_id") commentId: String): Single<DeleteCommentJson>
+
 
 }
 
