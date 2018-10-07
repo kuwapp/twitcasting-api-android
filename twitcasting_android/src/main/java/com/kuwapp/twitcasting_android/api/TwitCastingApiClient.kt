@@ -40,6 +40,8 @@ interface TwitCastingApiClient {
 
     fun getCategories(lang: Lang): Single<GetCategoriesJson>
 
+    fun searchUsers(words: String, limit: Int = 50, lang: Lang = Lang.Ja): Single<SearchUsersJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -128,6 +130,11 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
         return service.getCategories(lang.value).mapApiError()
     }
 
+
+    override fun searchUsers(words: String, limit: Int, lang: TwitCastingApiClient.Lang): Single<SearchUsersJson> {
+        return service.searchUsers(words, limit, lang.value).mapApiError()
+    }
+
     private fun <T> Single<T>.mapApiError(): Single<T> {
         return lift { observer ->
             object : SingleObserver<T> {
@@ -188,6 +195,9 @@ internal interface TwitCastingService {
 
     @GET("/categories")
     fun getCategories(@Query("lang") lang: String): Single<GetCategoriesJson>
+
+    @GET("/search/users")
+    fun searchUsers(@Query("words") words: String, @Query("limit") limit: Int, @Query("lang") lang: String): Single<SearchUsersJson>
 
 }
 
