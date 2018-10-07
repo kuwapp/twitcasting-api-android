@@ -14,7 +14,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.annotation.Config
-import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -32,11 +31,11 @@ internal class TwitCastingApiClientImplTest {
     fun setUp() {
         val dispatcher = object : Dispatcher() {
             override fun dispatch(request: RecordedRequest?): MockResponse {
-                println(request!!.path)
                 return when {
                     request == null -> MockResponse().setResponseCode(400)
                     request.path.matches(Regex("/users/[a-zA-Z0-9_]+")) -> MockResponse().setResponseCode(200).setBodyFromFileName("get_user_info.json")
                     request.path.matches(Regex("/users/[a-zA-Z0-9_]+/live/thumbnail(\\?.*)?")) -> MockResponse().setResponseCode(200).setBodyFromFileName("live_thumbnail.png")
+                    request.path.matches(Regex("/movies/[0-9]+")) -> MockResponse().setResponseCode(200).setBodyFromFileName("get_movie_info.json")
                     else -> MockResponse().setResponseCode(400)
                 }
             }
@@ -61,27 +60,28 @@ internal class TwitCastingApiClientImplTest {
         mockWebServer.shutdown()
     }
 
+    // あとで書き直す
+
     @Test
-    fun getUserInfo_givenUserId_response200() {
-        apiClient.getUserInfo("kuwapp_dev")
+    fun getUserInfo_givenUserId_assertComplete() {
+        val response = apiClient.getUserInfo("kuwapp_dev")
                 .test()
                 .await()
                 .assertNoErrors()
                 .assertComplete()
+        assertThat(response).isNotNull()
     }
 
     @Test
-    fun getUserInfo_givenEmptyUserId_response400() {
-        val httpException = apiClient.getUserInfo("")
+    fun getUserInfo_givenEmptyUserId_doError() {
+        apiClient.getUserInfo("")
                 .test()
                 .await()
-                .assertError(HttpException::class.java)
-                .errors()[0] as HttpException
-        assertThat(httpException.response().code()).isEqualTo(400)
+                .assertNotComplete()
     }
 
     @Test
-    fun getLiveThumbnailImage_response200() {
+    fun getLiveThumbnailImage_doComplete() {
         val response = apiClient.getLiveThumbnailImage("kuwapp_dev")
                 .test()
                 .await()
@@ -94,6 +94,33 @@ internal class TwitCastingApiClientImplTest {
         bufferedReader.forEachLine { buffer -> stringBuilder.append(buffer) }
         val expected = stringBuilder.toString().toByteArray()
         assertThat(response.byteArray).isEqualTo(expected)
+    }
+
+    @Test
+    fun getLiveThumbnailImage_doError() {
+        apiClient.getLiveThumbnailImage("")
+                .test()
+                .await()
+                .assertNotComplete()
+    }
+
+    @Test
+    fun getMovieInfo_doComplete() {
+        val response = apiClient.getMovieInfo("498315196")
+                .test()
+                .await()
+                .assertNoErrors()
+                .assertComplete()
+                .values()[0]
+        assertThat(response).isNotNull()
+    }
+
+    @Test
+    fun getMovieInfo_doError() {
+        apiClient.getMovieInfo("")
+                .test()
+                .await()
+                .assertNotComplete()
     }
 
 
