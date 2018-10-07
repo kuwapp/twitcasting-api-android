@@ -1,6 +1,10 @@
 package com.kuwapp.twitcasting_android.api
 
 import android.os.Build
+import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
+import com.nhaarman.mockito_kotlin.any
+import com.nhaarman.mockito_kotlin.doReturn
+import com.nhaarman.mockito_kotlin.mock
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.Dispatcher
 import okhttp3.mockwebserver.MockResponse
@@ -47,7 +51,10 @@ internal class TwitCastingApiClientImplTest {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build()
-        apiClient = TwitCastingApiClientImpl(retrofit)
+        val service = retrofit.create(TwitCastingService::class.java)
+        val bodyConverter = retrofit.responseBodyConverter<ResponseErrorJson>(ResponseErrorJson::class.java, emptyArray())
+        val errorConverter = ApiErrorConverter(bodyConverter)
+        apiClient = TwitCastingApiClientImpl(service, errorConverter)
     }
 
     @After
