@@ -28,6 +28,8 @@ interface TwitCastingApiClient {
 
     fun deleteComment(movieId: String, commentId: String): Single<DeleteCommentJson>
 
+    fun getSupportingStatus(userId: String, targetUserId: String): Single<GetSupportingStatusJson>
+
     enum class Size(internal val value: String) {
         Large("large"),
         Small("small")
@@ -75,11 +77,15 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
 
 
     override fun submitComment(movieId: String, comment: String, snsPostType: TwitCastingApiClient.SnsPostType): Single<SubmitCommentJson> {
-        return service.submitComment(movieId, comment, snsPostType.value)
+        return service.submitComment(movieId, comment, snsPostType.value).mapApiError()
     }
 
     override fun deleteComment(movieId: String, commentId: String): Single<DeleteCommentJson> {
-        return service.deleteComment(movieId, commentId)
+        return service.deleteComment(movieId, commentId).mapApiError()
+    }
+
+    override fun getSupportingStatus(userId: String, targetUserId: String): Single<GetSupportingStatusJson> {
+        return service.getSupportingStatus(userId, targetUserId).mapApiError()
     }
 
     private fun <T> Single<T>.mapApiError(): Single<T> {
@@ -124,6 +130,9 @@ internal interface TwitCastingService {
 
     @DELETE("/movies/{movie_id}/comments/{comment_id}")
     fun deleteComment(@Path("movie_id") movieId: String, @Path("comment_id") commentId: String): Single<DeleteCommentJson>
+
+    @GET("/users/{user_id}/supporting_status")
+    fun getSupportingStatus(@Path("user_id") userId: String, @Query("target_user_id") targetUserId: String): Single<GetSupportingStatusJson>
 
 
 }
