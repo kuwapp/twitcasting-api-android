@@ -10,19 +10,39 @@
         android:id="@+id/authorization"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
         android:layout_marginTop="24dp"
-        android:text="ログイン"/>
+        android:text="ログイン"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
-    <TextView
+    <Button
         android:id="@+id/user_info_api"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UserInfoApi"
         android:layout_marginTop="24dp"
+        android:text="UserInfoApi"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/authorization" />
+
+    <Button
+        android:id="@+id/live_thumbnail_api"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="LiveThumbnailApi"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/live_thumbnail"
+        app:layout_constraintTop_toBottomOf="@+id/user_info_api" />
+
+    <ImageView
+        android:id="@+id/live_thumbnail"
+        android:layout_width="160dp"
+        android:layout_height="90dp"
+        android:background="@android:color/black"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toRightOf="@+id/live_thumbnail_api"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_info_api" />
 
 </android.support.constraint.ConstraintLayout>
