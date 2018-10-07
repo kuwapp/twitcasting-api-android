@@ -2,10 +2,7 @@ package com.kuwapp.twitcasting_android.api
 
 import com.kuwapp.twitcasting_android.ApiError
 import com.kuwapp.twitcasting_android.TwitCastingApiException
-import com.kuwapp.twitcasting_android.api.json.GetLiveThumbnailImage
-import com.kuwapp.twitcasting_android.api.json.GetMovieInfoJson
-import com.kuwapp.twitcasting_android.api.json.GetUserInfoJson
-import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
+import com.kuwapp.twitcasting_android.api.json.*
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
@@ -24,6 +21,8 @@ interface TwitCastingApiClient {
     fun getLiveThumbnailImage(userId: String, size: Size = Size.Small, position: Position = Position.Latest): Single<GetLiveThumbnailImage>
 
     fun getMovieInfo(movieId: String): Single<GetMovieInfoJson>
+
+    fun getMovies(userId: String, offset: Int = 0, limit: Int = 50, sliceId: Int? = null): Single<GetMoviesJson>
 
     enum class Size(internal val value: String) {
         Large("large"),
@@ -53,6 +52,10 @@ internal class TwitCastingApiClientImpl(private val service: TwitCastingService,
 
     override fun getMovieInfo(movieId: String): Single<GetMovieInfoJson> {
         return service.getMovieInfo(movieId).mapApiError()
+    }
+
+    override fun getMovies(userId: String, offset: Int, limit: Int, sliceId: Int?): Single<GetMoviesJson> {
+        return service.getMovies(userId, offset, limit, sliceId).mapApiError()
     }
 
     private fun <T> Single<T>.mapApiError(): Single<T> {
@@ -85,6 +88,9 @@ internal interface TwitCastingService {
 
     @GET("/movies/{movie_id}")
     fun getMovieInfo(@Path("movie_id") movieId: String): Single<GetMovieInfoJson>
+
+    @GET("/users/{user_id}/movies")
+    fun getMovies(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("slice_id") sliceId: Int?): Single<GetMoviesJson>
 
 }
 

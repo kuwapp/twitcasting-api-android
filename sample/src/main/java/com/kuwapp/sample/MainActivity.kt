@@ -53,6 +53,16 @@ class MainActivity : AppCompatActivity() {
                         println(e)
                     })
         }
+        findViewById<View>(R.id.movies_api).setOnClickListener {
+            TwitCastingApi.client().getMovies("kuwapp_dev")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ json ->
+                        Toast.makeText(this, json.toString(), Toast.LENGTH_SHORT).show()
+                    }, { e ->
+                        println(e)
+                    })
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
