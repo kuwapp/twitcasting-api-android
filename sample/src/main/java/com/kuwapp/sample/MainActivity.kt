@@ -43,6 +43,16 @@ class MainActivity : AppCompatActivity() {
 
                     })
         }
+        findViewById<View>(R.id.movie_info_api).setOnClickListener {
+            TwitCastingApi.client().getMovieInfo("498315196")
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe({ json ->
+                        Toast.makeText(this, json.toString(), Toast.LENGTH_SHORT).show()
+                    }, { e ->
+                        println(e)
+                    })
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
