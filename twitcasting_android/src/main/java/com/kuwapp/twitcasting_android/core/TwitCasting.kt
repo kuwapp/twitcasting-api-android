@@ -8,6 +8,7 @@ object TwitCasting {
     private var clientSecret: String? = null
 
     fun initialize(clientId: String, clientSecret: String) {
+        if (clientId.isEmpty() || clientSecret.isEmpty()) throw IllegalArgumentException("clientId or clientSecret is invalid")
         TwitCasting.clientId = clientId
         TwitCasting.clientSecret = clientSecret
     }
