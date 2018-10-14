@@ -1,4 +1,4 @@
-package com.kuwapp.twitcasting_android
+package com.kuwapp.twitcasting_android.core.exception
 
 class TwitCastingNotInitializedException : RuntimeException("must call TwitCasting.initialize method.")
 

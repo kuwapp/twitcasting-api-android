@@ -1,7 +1,7 @@
 package com.kuwapp.twitcasting_android.api
 
-import com.kuwapp.twitcasting_android.ApiError
-import com.kuwapp.twitcasting_android.TwitCastingApiException
+import com.kuwapp.twitcasting_android.core.exception.ApiError
+import com.kuwapp.twitcasting_android.core.exception.TwitCastingApiException
 import com.kuwapp.twitcasting_android.api.json.*
 import io.reactivex.Single
 import io.reactivex.SingleObserver

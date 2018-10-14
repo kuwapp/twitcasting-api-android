@@ -1,7 +1,7 @@
 package com.kuwapp.sample
 
 import android.app.Application
-import com.kuwapp.twitcasting_android.TwitCasting
+import com.kuwapp.twitcasting_android.core.TwitCasting
 
 class SampleApplication : Application() {
 

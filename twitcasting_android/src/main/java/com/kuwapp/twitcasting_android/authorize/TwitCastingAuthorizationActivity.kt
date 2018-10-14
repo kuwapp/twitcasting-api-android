@@ -5,7 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import com.kuwapp.twitcasting_android.TwitCasting
+import com.kuwapp.twitcasting_android.core.TwitCasting
 
 class TwitCastingAuthorizationActivity : AppCompatActivity() {
 

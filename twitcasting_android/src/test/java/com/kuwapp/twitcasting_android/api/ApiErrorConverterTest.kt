@@ -1,7 +1,7 @@
 package com.kuwapp.twitcasting_android.api
 
-import com.kuwapp.twitcasting_android.ApiError
-import com.kuwapp.twitcasting_android.TwitCastingApiException
+import com.kuwapp.twitcasting_android.core.exception.ApiError
+import com.kuwapp.twitcasting_android.core.exception.TwitCastingApiException
 import com.kuwapp.twitcasting_android.api.json.ErrorJson
 import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
 import com.nhaarman.mockito_kotlin.any
@@ -9,7 +9,6 @@ import com.nhaarman.mockito_kotlin.doReturn
 import com.nhaarman.mockito_kotlin.mock
 import okhttp3.ResponseBody
 import org.assertj.core.api.Assertions.assertThat
-import org.bouncycastle.asn1.x500.style.RFC4519Style.l
 import org.junit.After
 import org.junit.Before
 import org.junit.Test

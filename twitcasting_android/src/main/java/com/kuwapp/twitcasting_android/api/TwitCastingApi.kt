@@ -1,7 +1,6 @@
 package com.kuwapp.twitcasting_android.api
 
-import com.kuwapp.twitcasting_android.TwitCasting
-import com.kuwapp.twitcasting_android.TwitCastingNotInitializedException
+import com.kuwapp.twitcasting_android.core.TwitCasting
 
 object TwitCastingApi {
 
