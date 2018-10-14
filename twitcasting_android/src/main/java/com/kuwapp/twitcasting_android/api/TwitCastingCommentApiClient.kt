@@ -61,12 +61,24 @@ internal class TwitCastingCommentApiClientImpl(private val service: TwitCastingC
 internal interface TwitCastingCommentService {
 
     @GET("/movies/{movie_id}/comments")
-    fun getComments(@Path("movie_id") movieId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("slice_id") sliceId: Int?): Single<GetCommentsJson>
+    fun getComments(
+            @Path("movie_id") movieId: String,
+            @Query("offset") offset: Int,
+            @Query("limit") limit: Int,
+            @Query("slice_id") sliceId: Int?
+    ): Single<GetCommentsJson>
 
     @POST("/movies/{movie_id}/comments")
-    fun submitComment(@Path("movie_id") movieId: String, @Field("comment") comment: String, @Field("sns") snsType: String): Single<SubmitCommentJson>
+    fun submitComment(
+            @Path("movie_id") movieId: String,
+            @Field("comment") comment: String,
+            @Field("sns") snsType: String
+    ): Single<SubmitCommentJson>
 
     @DELETE("/movies/{movie_id}/comments/{comment_id}")
-    fun deleteComment(@Path("movie_id") movieId: String, @Path("comment_id") commentId: String): Single<DeleteCommentJson>
+    fun deleteComment(
+            @Path("movie_id") movieId: String,
+            @Path("comment_id") commentId: String
+    ): Single<DeleteCommentJson>
 
 }

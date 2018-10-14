@@ -1,38 +1,31 @@
 package com.kuwapp.twitcasting_android.api
 
-import com.kuwapp.twitcasting_android.api.json.ResponseErrorJson
-import okhttp3.OkHttpClient
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
-import retrofit2.converter.gson.GsonConverterFactory
 
-internal fun createTwitCastingApiClient(clientId: String, clientSecret: String): TwitCastingApiClient {
-    val authHeader = TwitCastingAuthHeader(clientId, clientSecret, object : AccessTokenProvider {
-        override fun accessToken(): String? = null
-    })
-    val okHttpClient = createOkHttpClient(authHeader)
-    val retrofit = createRetrofit(okHttpClient)
-    val bodyConverter = retrofit.responseBodyConverter<ResponseErrorJson>(ResponseErrorJson::class.java, emptyArray())
-    val errorConverter = ApiErrorConverter(bodyConverter)
-    return TwitCastingApiClientImpl(retrofit.create(TwitCastingService::class.java), errorConverter)
+internal fun createCategoryApiClient(retrofit: Retrofit, apiErrorConverter: ApiErrorConverter): TwitCastingCategoryApiClient {
+    return TwitCastingCategoryApiClientImpl(
+            service = retrofit.create(TwitCastingCategoryService::class.java),
+            apiErrorConverter = apiErrorConverter
+    )
 }
 
-private fun createRetrofit(client: OkHttpClient): Retrofit {
-    return Retrofit.Builder()
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(client)
-            .baseUrl("https://apiv2.twitcasting.tv")
-            .build()
+internal fun createUserApiClient(retrofit: Retrofit, apiErrorConverter: ApiErrorConverter): TwitCastingUserApiClient {
+    return TwitCastingUserApiClientImpl(
+            service = retrofit.create(TwitCastingUserService::class.java),
+            apiErrorConverter = apiErrorConverter
+    )
 }
 
-private fun createOkHttpClient(authHeader: TwitCastingAuthHeader): OkHttpClient {
-    return OkHttpClient.Builder()
-            .addInterceptor {
-                val request = it.request().newBuilder()
-                        .headers(authHeader.headers())
-                        .build()
-                it.proceed(request)
-            }
-            .build()
+internal fun createCommentApiClient(retrofit: Retrofit, apiErrorConverter: ApiErrorConverter): TwitCastingCommentApiClient {
+    return TwitCastingCommentApiClientImpl(
+            service = retrofit.create(TwitCastingCommentService::class.java),
+            apiErrorConverter = apiErrorConverter
+    )
+}
+
+internal fun createMovieApiClient(retrofit: Retrofit, apiErrorConverter: ApiErrorConverter): TwitCastingMovieApiClient {
+    return TwitCastingMovieApiClientImpl(
+            service = retrofit.create(TwitCastingMovieService::class.java),
+            apiErrorConverter = apiErrorConverter
+    )
 }

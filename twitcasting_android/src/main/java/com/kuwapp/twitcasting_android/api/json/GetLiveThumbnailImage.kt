@@ -2,7 +2,7 @@ package com.kuwapp.twitcasting_android.api.json
 
 import java.util.*
 
-data class GetLiveThumbnailImage(val byteArray: ByteArray) {
+internal data class GetLiveThumbnailImage(val byteArray: ByteArray) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

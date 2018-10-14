@@ -13,7 +13,7 @@ interface TwitCastingCategoryApiClient {
 
 }
 
-internal class TwitCastingCategoryApiClientImpl(private val service: TwitCastingCategoryApiService,
+internal class TwitCastingCategoryApiClientImpl(private val service: TwitCastingCategoryService,
                                                 private val apiErrorConverter: ApiErrorConverter) : TwitCastingCategoryApiClient {
 
     override fun getCategories(): Single<List<Category>> {
@@ -25,7 +25,7 @@ internal class TwitCastingCategoryApiClientImpl(private val service: TwitCasting
     }
 }
 
-internal interface TwitCastingCategoryApiService {
+internal interface TwitCastingCategoryService {
 
     @GET("/categories")
     fun getCategories(@Query("lang") lang: String): Single<GetCategoriesJson>

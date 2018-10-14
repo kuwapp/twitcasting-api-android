@@ -2,7 +2,7 @@ package com.kuwapp.twitcasting_android.api.json
 
 import com.google.gson.annotations.SerializedName
 
-data class MovieJson(@SerializedName("id") val id: String,
+internal data class MovieJson(@SerializedName("id") val id: String,
                      @SerializedName("user_id") val userId: String,
                      @SerializedName("title") val title: String,
                      @SerializedName("subtitle") val subTitle: String?,

@@ -94,24 +94,46 @@ internal class TwitCastingUserApiClientImpl(private val service: TwitCastingUser
 internal interface TwitCastingUserService {
 
     @GET("/users/{user_id}")
-    fun getUserInfo(@Path("user_id") userId: String): Single<GetUserInfoJson>
+    fun getUserInfo(
+            @Path("user_id") userId: String
+    ): Single<GetUserInfoJson>
 
     @GET("/search/users")
-    fun searchUsers(@Query("words") words: String, @Query("limit") limit: Int, @Query("lang") lang: String): Single<SearchUsersJson>
+    fun searchUsers(
+            @Query("words") words: String,
+            @Query("limit") limit: Int,
+            @Query("lang") lang: String
+    ): Single<SearchUsersJson>
 
     @GET("/users/{user_id}/supporting_status")
-    fun getSupportingStatus(@Path("user_id") userId: String, @Query("target_user_id") targetUserId: String): Single<GetSupportingStatusJson>
+    fun getSupportingStatus(
+            @Path("user_id") userId: String,
+            @Query("target_user_id") targetUserId: String
+    ): Single<GetSupportingStatusJson>
 
     @PUT("/support")
-    fun supportUser(@Field("target_user_ids[]") targetUserIds: List<String>): Single<SupportUserJson>
+    fun supportUser(
+            @Field("target_user_ids[]") targetUserIds: List<String>
+    ): Single<SupportUserJson>
 
     @PUT("/unsupport")
-    fun unsupportUser(@Field("target_user_ids[]") targetUserIds: List<String>): Single<UnsupportUserJson>
+    fun unsupportUser(
+            @Field("target_user_ids[]") targetUserIds: List<String>
+    ): Single<UnsupportUserJson>
 
     @GET("/users/{user_id}/supporting")
-    fun getSupportingUsers(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int): Single<GetSupportingUsersJson>
+    fun getSupportingUsers(
+            @Path("user_id") userId: String,
+            @Query("offset") offset: Int,
+            @Query("limit") limit: Int
+    ): Single<GetSupportingUsersJson>
 
     @GET("/users/{user_id}/supporters")
-    fun getSupportedUsers(@Path("user_id") userId: String, @Query("offset") offset: Int, @Query("limit") limit: Int, @Query("sort") sort: String): Single<GetSupportedUsersJson>
+    fun getSupportedUsers(
+            @Path("user_id") userId: String,
+            @Query("offset") offset: Int,
+            @Query("limit") limit: Int,
+            @Query("sort") sort: String
+    ): Single<GetSupportedUsersJson>
 
 }
