@@ -1,16 +1,11 @@
 package com.kuwapp.twitcasting_android.api
 
-import com.kuwapp.twitcasting_android.core.exception.ApiError
-import com.kuwapp.twitcasting_android.core.exception.TwitCastingApiException
 import com.kuwapp.twitcasting_android.api.json.*
 import io.reactivex.Single
 import io.reactivex.SingleObserver
 import io.reactivex.disposables.Disposable
 import okhttp3.ResponseBody
-import retrofit2.Converter
-import retrofit2.HttpException
 import retrofit2.http.*
-import java.io.IOException
 
 interface TwitCastingApiClient {
 

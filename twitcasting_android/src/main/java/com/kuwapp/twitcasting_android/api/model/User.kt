@@ -8,7 +8,7 @@ data class User(val id: String,
                 val thumbnailUrl: String,
                 val profileMessage: String,
                 val level: Int,
-                val lastMovieId: String,
+                val lastMovieId: String?,
                 val isLive: Boolean)
 
 internal fun UserJson.toUser(): User {
