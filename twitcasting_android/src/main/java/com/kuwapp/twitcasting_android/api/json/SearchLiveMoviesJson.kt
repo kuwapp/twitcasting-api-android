@@ -2,4 +2,4 @@ package com.kuwapp.twitcasting_android.api.json
 
 import com.google.gson.annotations.SerializedName
 
-data class SearchLiveMoviesJson(@SerializedName("movies") val movies: List<MovieJson>)
+data class SearchLiveMoviesJson(@SerializedName("movies") val movies: List<GetMovieInfoJson>)
