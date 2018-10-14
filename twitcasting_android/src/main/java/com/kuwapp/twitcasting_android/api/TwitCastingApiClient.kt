@@ -214,18 +214,3 @@ internal interface TwitCastingService {
     fun searchLiveMovies(@Query("limit") limit: Int, @Query("type") type: String, @Query("context") context: String?, @Query("lang") lang: String): Single<SearchLiveMoviesJson>
 
 }
-
-internal class ApiErrorConverter(private val errorConverter: Converter<ResponseBody, ResponseErrorJson>) {
-
-    fun convert(throwable: Throwable): Throwable {
-        if (throwable !is HttpException) return throwable
-        val errorBody = throwable.response().errorBody() ?: return throwable
-        try {
-            val error = errorConverter.convert(errorBody)?.error ?: return throwable
-            return TwitCastingApiException(ApiError.findBy(error.code), error.message)
-        } catch (e: IOException) {
-            return throwable
-        }
-    }
-
-}

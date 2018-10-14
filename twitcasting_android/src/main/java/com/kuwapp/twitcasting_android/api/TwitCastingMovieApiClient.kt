@@ -30,7 +30,8 @@ interface TwitCastingMovieApiClient {
 
 }
 
-internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMovieService) : TwitCastingMovieApiClient {
+internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMovieService,
+                                             private val apiErrorConverter: ApiErrorConverter) : TwitCastingMovieApiClient {
 
     override fun getMovie(movieId: String): Single<MovieInfo> {
         return service.getMovieInfo(
@@ -49,7 +50,7 @@ internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMov
             val totalCount = response.totalCount
             val movies = response.movies.map { it.toMovie() }
             Pair(totalCount, movies)
-        }
+        }.mapApiError(apiErrorConverter)
     }
 
     override fun getRecommendMovies(limit: Int): Single<List<MovieInfo>> {
@@ -57,7 +58,9 @@ internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMov
                 limit = limit,
                 type = "recommend",
                 lang = "ja"
-        ).map { response -> response.movies.map { it.toMovieInfo() } }
+        ).map { response ->
+            response.movies.map { it.toMovieInfo() }
+        }.mapApiError(apiErrorConverter)
     }
 
     override fun getNewMovies(limit: Int): Single<List<MovieInfo>> {
@@ -65,7 +68,9 @@ internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMov
                 limit = limit,
                 type = "new",
                 lang = "ja"
-        ).map { response -> response.movies.map { it.toMovieInfo() } }
+        ).map { response ->
+            response.movies.map { it.toMovieInfo() }
+        }.mapApiError(apiErrorConverter)
     }
 
     override fun searchLiveMoviesByWord(word: String, limit: Int): Single<List<MovieInfo>> {
@@ -74,7 +79,9 @@ internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMov
                 type = "word",
                 context = word,
                 lang = "ja"
-        ).map { response -> response.movies.map { it.toMovieInfo() } }
+        ).map { response ->
+            response.movies.map { it.toMovieInfo() }
+        }.mapApiError(apiErrorConverter)
     }
 
     override fun searchLiveMoviesByTag(tag: String, limit: Int): Single<List<MovieInfo>> {
@@ -83,7 +90,9 @@ internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMov
                 type = "tag",
                 context = tag,
                 lang = "ja"
-        ).map { response -> response.movies.map { it.toMovieInfo() } }
+        ).map { response ->
+            response.movies.map { it.toMovieInfo() }
+        }.mapApiError(apiErrorConverter)
     }
 
     override fun searchLiveMoviesByCategory(subCategoryId: String, limit: Int): Single<List<MovieInfo>> {
@@ -92,7 +101,9 @@ internal class TwitCastingMovieApiClientImpl(private val service: TwitCastingMov
                 type = "category",
                 context = subCategoryId,
                 lang = "ja"
-        ).map { response -> response.movies.map { it.toMovieInfo() } }
+        ).map { response ->
+            response.movies.map { it.toMovieInfo() }
+        }.mapApiError(apiErrorConverter)
     }
 
 }
